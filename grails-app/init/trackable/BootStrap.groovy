@@ -1,0 +1,9 @@
+package trackable
+
+class BootStrap {
+
+    def init = { servletContext ->
+    }
+    def destroy = {
+    }
+}
