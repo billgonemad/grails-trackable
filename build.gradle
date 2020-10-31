@@ -8,8 +8,8 @@ buildscript {
     }
 }
 
-version "0.1"
-group "trackable"
+version "0.1--SNAPSHOT"
+group "org.grails.plugins"
 
 apply plugin:"eclipse"
 apply plugin:"idea"
@@ -56,6 +56,8 @@ dependencies {
     testCompile "org.grails:grails-gorm-testing-support"
     testCompile "org.mockito:mockito-core"
     testCompile "org.grails:grails-web-testing-support"
+
+    compileOnly "org.grails.plugins:spring-security-core:4.0.0"
 }
 
 bootRun {
@@ -81,13 +83,13 @@ grailsPublish {
     // TODO: Provide values here
     user = 'user'
     key = 'key'
-    githubSlug = 'foo/bar'
+    githubSlug = 'billgonemad/trackable'
     license {
         name = 'Apache-2.0'
     }
-    title = "My Plugin"
+    title = "Trackable"
     desc = "Full plugin description"
-    developers = [johndoe:"John Doe"]
+    developers = [billgonemad:"William Malinowski"]
 }
 
 

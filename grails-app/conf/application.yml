@@ -2,7 +2,7 @@
 grails:
     profile: web-plugin
     codegen:
-        defaultPackage: trackable
+        defaultPackage: grails.plugins.trackable
     gorm:
         reactor:
             # Whether to translate GORM events into Reactor events

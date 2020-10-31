@@ -1,4 +1,4 @@
-package trackable
+package grails.plugins.trackable
 
 class BootStrap {
 
