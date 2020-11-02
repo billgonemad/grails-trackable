@@ -1,10 +1,11 @@
 //= require jquery
+//= require bootstrap-switch-button.min
 //= require_self
 
 $(function() {
-   $('div.trackable-widget input.tracakble-btn').change(function() {
+   $('div.trackable-widget input.trackable-switch').change(function() {
        var $form = $(this).closest('form');
-       var value = $(this).val();
+       var value = $(this).is(':checked').toString();
        $('input[name="tracked"]', $form).val(value);
 
        $.ajax({
