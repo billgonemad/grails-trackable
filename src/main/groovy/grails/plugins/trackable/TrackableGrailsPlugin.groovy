@@ -36,10 +36,10 @@ Brief summary/description of the plugin.
 //    def developers = [ [ name: "Joe Bloggs", email: "joe@bloggs.net" ]]
 
     // Location of the plugin's issue tracker.
-    def issueManagement = [ system: "Github", url: "https://github.com/billgonemad/trackable/issues" ]
+    def issueManagement = [ system: "Github", url: "https://github.com/billgonemad/grails-trackable/issues" ]
 
     // Online location of the plugin's browseable source code.
-    def scm = [url: "https://github.com/billgonemad/trackable"]
+    def scm = [url: "https://github.com/billgonemad/grails-trackable"]
 
     Closure doWithSpring() { {->
             // TODO Implement runtime spring config (optional)

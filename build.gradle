@@ -81,9 +81,9 @@ tasks.withType(GroovyCompile) {
 bootJar.enabled = false
 grailsPublish {
     // TODO: Provide values here
-    user = 'user'
-    key = 'key'
-    githubSlug = 'billgonemad/trackable'
+//    user = 'user'
+//    key = 'key'
+    githubSlug = 'billgonemad/grails-trackable'
     license {
         name = 'Apache-2.0'
     }

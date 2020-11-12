@@ -1,5 +1,5 @@
 <div class="trackable-widget">
-%{--    <span>${label}</span>--}%
+    <span class="trackable-label">${label}</span>
     <g:form url="[controller: 'trackable', action: 'track']">
         <input type="hidden" name="tracked" value="${userTracked ? 'true' : 'false'}">
         <input type="hidden" name="trackedId" value="${trackable.id}"/>

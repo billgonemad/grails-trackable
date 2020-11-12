@@ -4,7 +4,6 @@ import grails.plugin.springsecurity.SpringSecurityService
 
 class TrackableTagLib {
     static namespace = "trackable"
-//    static defaultEncodeAs = [taglib:'html']
 
     SpringSecurityService springSecurityService
 
@@ -16,12 +15,13 @@ class TrackableTagLib {
             return
         }
 
+        String widgetLabel = attrs.get('widgetLabel') ?: 'Tracker Status'
         String doneLabel = attrs.get('doneLabel') ?: 'Done'
         String notDoneLabel = attrs.get('notDoneLabel') ?: 'Not Done'
         Trackable trackable = attrs.get('bean') as Trackable
         def user = springSecurityService.currentUser
         UserTracked userTracked = UserTracked.lookup(user.id, user.class.name, trackable.id, trackable.class.name)
 
-        out << render(template: '/trackable/widget', model: [notDoneLabel: notDoneLabel, doneLabel: doneLabel, userTracked: userTracked, trackable: trackable])
+        out << render(template: '/trackable/widget', model: [label: widgetLabel, notDoneLabel: notDoneLabel, doneLabel: doneLabel, userTracked: userTracked, trackable: trackable])
     }
 }
