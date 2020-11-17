@@ -90,3 +90,19 @@ management:
     endpoints:
         jmx:
             unique-names: true
+
+hibernate:
+    cache:
+        use_second_level_cache : false
+        use_query_cache : false
+        provider_class : 'org.hibernate.cache.EhCacheProvider'
+        queries: false
+
+dataSource:
+    pooled: true
+    jmxExport: true
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ''
+    dbCreate: 'update'
+    url: 'jdbc:h2:mem:testDb'
