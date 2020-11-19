@@ -53,14 +53,6 @@ class TrackableSpec extends Specification {
         3 == Country.getTotalTrcked(user1.id)
     }
 
-    def "test get percentage total tracked of none"() {
-        List<User> users = User.list()
-        expect:
-        for (User user : users) {
-            0 == Country.getPercentageTracked(user.id)
-        }
-    }
-
     def "test get top tracked wien none tracked"() {
         expect:
         null == Country.getTopTracked()
@@ -81,9 +73,17 @@ class TrackableSpec extends Specification {
         }
     }
 
-    // TODO - delete this - stupid testing setup of test
-    def "test"() {
+    def "test get total users when tracked"() {
+        given:
+        User user1 = User.findByUsername('User 1')
+        User user2 = User.findByUsername('User 2')
+        User user3 = User.findByUsername('User 3')
+        Country mexico = Country.findByName('Mexico').track(user1).track(user2)
+        Country canada = Country.findByName("Canada").track(user3)
+
         expect:
-        Country.count() == 7
+        0 == Country.findByName('United States').getTotalUsers()
+        2 == mexico.getTotalUsers()
+        1 == canada.getTotalUsers()
     }
 }

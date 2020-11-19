@@ -1,5 +1,7 @@
 package grails.plugins.trackable
 
+
+import grails.util.GrailsNameUtils
 import groovy.util.logging.Slf4j
 
 @Slf4j
@@ -23,7 +25,7 @@ trait Trackable {
             if (!userTracked.validate()) {
                 throw new TrackableException("Unable to create a new UserTracked object")
             }
-            userTracked.save()
+            userTracked.save(flush: true)
             log.info("saved with id of {}", userTracked.id)
         }
 
@@ -36,13 +38,14 @@ trait Trackable {
 
     static def getTopTracker(Map params = [:]) {
         if (!params.max) { params.max = 1 }
+        String trackedClass = GrailsNameUtils.getFullClassName(this)
         List<Long> trackerId = UserTracked.executeQuery("""
             SELECT new Map(userId, userClass)
             FROM UserTracked
             WHERE trackedClass = :clazz
             GROUP BY userId
             ORDER BY COUNT(*) DESC
-        """, [clazz: this.class.name], params) as List<Long>
+        """, [clazz: trackedClass], params) as List<Long>
         if (!trackerId) {
             return null
         }
@@ -54,13 +57,14 @@ trait Trackable {
 
     static List<Trackable> getTopTracked(Map params = [:]) {
         if (!params.max) { params.max = 1 }
+        String trackedClass = GrailsNameUtils.getFullClassName(this)
         List<Long> trackableId =  UserTracked.executeQuery("""
             SELECT trackedId
             FROM UserTracked 
             WHERE trackedClass = :clazz
             GROUP BY trackedId
             ORDER BY count(*) DESC
-        """, [clazz: this.class.name], params) as List<Long>
+        """, [clazz: trackedClass], params) as List<Long>
         if (!trackableId) {
             return null
         }
@@ -69,22 +73,14 @@ trait Trackable {
     }
 
     static Integer getTotalTrcked(Long userId) {
+        log.info("getting total tracked for {}", userId)
+        String trackedClass = GrailsNameUtils.getFullClassName(this)
         return UserTracked.createCriteria().get({
             projections {
                 count()
             }
             eq('userId', userId)
-            eq('trackedClass', this.class.name)
+            eq('trackedClass', trackedClass)
         }) as Integer
-    }
-
-    static BigDecimal getPercentageTracked(Long userId) {
-        Integer tracked = getTotalTrcked(userId)
-        if (tracked == 0) { return BigDecimal.ZERO }
-        Integer totalTrackable = this.class.createCriteria().get({
-            count()
-        }) as Integer
-
-        return tracked / totalTrackable
     }
 }
