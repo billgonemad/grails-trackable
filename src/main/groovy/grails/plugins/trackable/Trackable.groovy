@@ -36,51 +36,87 @@ trait Trackable {
         return UserTracked.countByTrackedIdAndTrackedClass(this.id, this.class.name)
     }
 
-    static def getTopTracker(Map params = [:]) {
-        if (!params.max) { params.max = 1 }
+    static Tuple2<Integer, List> getTopTracker() {
+        Integer topTrackerCount = getTopTrackerCount()
+        if (topTrackerCount == null) {
+            return new Tuple2<Integer, List>(null, null)
+        }
         String trackedClass = GrailsNameUtils.getFullClassName(this)
         List<Long> trackerId = UserTracked.executeQuery("""
-            SELECT new Map(userId, userClass)
+            SELECT new Map(userId as userId, userClass as userClass)
             FROM UserTracked
             WHERE trackedClass = :clazz
             GROUP BY userId
-            ORDER BY COUNT(*) DESC
-        """, [clazz: trackedClass], params) as List<Long>
+            HAVING COUNT(*) = :topCount
+        """, [clazz: trackedClass, topCount: topTrackerCount as Long]) as List<Long>
         if (!trackerId) {
-            return null
+            return new Tuple2<Integer, List>(topTrackerCount, [])
         }
 
-        Long userId = trackerId.first().userId as Long
-        String userClass = trackerId.first().userClass as String
-        return getClass().classLoader.loadClass(userClass).get(userId)
+        return new Tuple2<Integer, List>(topTrackerCount, trackerId.collect {
+            Long userId = it.userId as Long
+            String userClass = it.userClass as String
+            return getClass().classLoader.loadClass(userClass).get(userId)
+        })
     }
 
-    static List<Trackable> getTopTracked(Map params = [:]) {
-        if (!params.max) { params.max = 1 }
+    static Tuple2<Integer, List<Trackable>> getTopTracked() {
+        Integer topTrackedCount = getTopTrackedCount()
+        if (topTrackedCount == null) {
+            return new Tuple2<Integer, List<Trackable>>(null, null)
+        }
+
         String trackedClass = GrailsNameUtils.getFullClassName(this)
         List<Long> trackableId =  UserTracked.executeQuery("""
             SELECT trackedId
             FROM UserTracked 
             WHERE trackedClass = :clazz
             GROUP BY trackedId
-            ORDER BY count(*) DESC
-        """, [clazz: trackedClass], params) as List<Long>
+            HAVING COUNT(*) = :topCount
+            ORDER BY NULL
+        """, [clazz: trackedClass, topCount: topTrackedCount as Long]) as List<Long>
         if (!trackableId) {
-            return null
+            return new Tuple2<Integer, List<Trackable>>(topTrackedCount, [])
         }
 
-        return get(trackableId.first())
+        return new Tuple2<Integer, List<Trackable>>(topTrackedCount,trackableId.collect { get(it) })
     }
 
     static Integer getTotalTrcked(Long userId) {
         log.info("getting total tracked for {}", userId)
         String trackedClass = GrailsNameUtils.getFullClassName(this)
-        return UserTracked.createCriteria().get({
-            projections {
-                count()
-            }
-            eq('userId', userId)
-            eq('trackedClass', trackedClass)
-        }) as Integer
+        return UserTracked.countByUserIdAndTrackedClass(userId, trackedClass)
+    }
+
+    static Integer getTopTrackerCount() {
+        String trackedClass = GrailsNameUtils.getFullClassName(this)
+        List<Integer> topCounts =  UserTracked.executeQuery("""
+            SELECT COUNT(*)
+            FROM UserTracked 
+            WHERE trackedClass = :clazz
+            GROUP BY userId
+            ORDER BY COUNT(*) DESC
+        """, [clazz: trackedClass], [max: 1]) as List<Integer>
+        if (!topCounts) {
+            return null
+        }
+
+        return topCounts.first()
+    }
+
+    static Integer getTopTrackedCount() {
+        String trackedClass = GrailsNameUtils.getFullClassName(this)
+        List<Integer> topCounts =  UserTracked.executeQuery("""
+            SELECT COUNT(*)
+            FROM UserTracked 
+            WHERE trackedClass = :clazz
+            GROUP BY trackedId
+            ORDER BY COUNT(*) DESC
+        """, [clazz: trackedClass], [max: 1]) as List<Integer>
+        if (!topCounts) {
+            return null
+        }
+
+        return topCounts.first()
     }
 }

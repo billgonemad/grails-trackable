@@ -53,14 +53,80 @@ class TrackableSpec extends Specification {
         3 == Country.getTotalTrcked(user1.id)
     }
 
-    def "test get top tracked wien none tracked"() {
+    def "test get top tracked when clear winner"() {
+        given:
+        User user1 = User.findByUsername('User 1')
+        User user2 = User.findByUsername('User 2')
+        Country.findByName('Japan').track(user1).track(user2)
+        Country.findByName('China').track(user2)
+        Country.findByName('United Kingdom').track(user1)
+
         expect:
-        null == Country.getTopTracked()
+        Tuple2<Integer, List<Trackable>> results = Country.topTracked
+        2 == results.first
+        [Country.findByName('Japan')] == results.second
+    }
+
+    def "test get top tracked with tie for winner"() {
+        given:
+        User user1 = User.findByUsername('User 1')
+        User user2 = User.findByUsername('User 2')
+        User user3 = User.findByUsername('User 3')
+        Country.findByName('Japan').track(user1).track(user2).track(user3)
+        Country.findByName('China').track(user2).track(user3)
+        Country.findByName('United Kingdom').track(user1).track(user3).track(user2)
+
+        expect:
+        Tuple2<Integer, List<Trackable>> results = Country.topTracked
+        3 == results.first
+        2 == results.second.size()
+        results.second.contains(Country.findByName('Japan'))
+        results.second.contains(Country.findByName('United Kingdom'))
+    }
+
+    def "test get top tracked when none tracked"() {
+        expect:
+        Tuple2<Integer, List<Trackable>> results =  Country.getTopTracked()
+        null == results.first
+        null == results.second
+    }
+
+    def "test get top tracker when clear winner"() {
+        given:
+        User user1 = User.findByUsername('User 1')
+        User user2 = User.findByUsername('User 2')
+        Country.findByName('Japan').track(user1).track(user2)
+        Country.findByName('China').track(user2).track(user1)
+        Country.findByName('United Kingdom').track(user1)
+
+        expect:
+        Tuple2<Integer, List> results = Country.topTracker
+        3 == results.first
+        [user1] == results.second
+    }
+
+    def "test get top tracker with tie for winner"() {
+        given:
+        User user1 = User.findByUsername('User 1')
+        User user2 = User.findByUsername('User 2')
+        User user3 = User.findByUsername('User 3')
+        Country.findByName('Japan').track(user1).track(user3)
+        Country.findByName('China').track(user1).track(user2).track(user3)
+        Country.findByName('United Kingdom').track(user1).track(user3).track(user2)
+
+        expect:
+        Tuple2<Integer, List<Trackable>> results = Country.topTracker
+        3 == results.first
+        2 == results.second.size()
+        results.second.contains(user1)
+        results.second.contains(user3)
     }
 
     def "test get top tracker when none tracked"() {
         expect:
-        null == Country.getTopTracker()
+        Tuple2<Integer, List> results = Country.getTopTracker()
+        null == results.first
+        null == results.second
     }
 
     def "test get total users when none tracked"() {
