@@ -19,7 +19,7 @@ class TrackableTagLib {
         String doneLabel = attrs.get('doneLabel') ?: 'Done'
         String notDoneLabel = attrs.get('notDoneLabel') ?: 'Not Done'
         Trackable trackable = attrs.get('bean') as Trackable
-        def user = springSecurityService.currentUser
+        def user = springSecurityService.getCurrentUser()
         UserTracked userTracked = UserTracked.lookup(user.id, user.class.name, trackable.id, trackable.class.name)
 
         out << render(template: '/trackable/widget', model: [label: widgetLabel, notDoneLabel: notDoneLabel, doneLabel: doneLabel, userTracked: userTracked, trackable: trackable])
