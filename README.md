@@ -1,4 +1,4 @@
-# Trackable Grails Plugin
+# Trackable Grails Plugin [![Build Status](https://travis-ci.com/billgonemad/grails-trackable.svg?branch=master)](https://travis-ci.com/billgonemad/grails-trackable)
 
 Welcome to the  source code for the Trackable Grails Plugin.  
 
