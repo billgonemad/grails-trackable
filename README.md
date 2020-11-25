@@ -1,5 +1,9 @@
 # Trackable Grails Plugin
 
+Welcome to the  source code for the Trackable Grails Plugin.  
+
+This plugin provides the ability for users to track things such as countries visited, favorite beers, etc.
+
 ## Requirements
 - Grails 4.0+
 - JDK 1.8+
