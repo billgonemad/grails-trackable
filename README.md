@@ -10,5 +10,11 @@ This plugin provides the ability for users to track things such as countries vis
 - Spring Security Core Plugin 4.0+
 
 ## Installation
-`compile 'org.grails.plugins:trackable:0.1--SNAPSHOT'`
+`compile 'org.grails.plugins:trackable:0.1.1--SNAPSHOT'`
+
+## Usage
+
+On any domain classes you wish users to be able to track, you'll just need to implement the _Trackable_ trait provited.
+
+`class Country implements Trackable`
 

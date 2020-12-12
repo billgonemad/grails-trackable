@@ -9,6 +9,8 @@ class TrackableGrailsPlugin extends Plugin {
     def grailsVersion = "4.0.4 > *"
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
+        "grails-app/domain/com/demo/**",
+        "com/demo/**",
         "grails-app/views/error.gsp"
     ]
 
