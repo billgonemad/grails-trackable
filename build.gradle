@@ -62,8 +62,8 @@ dependencies {
     runtime "org.apache.tomcat:tomcat-jdbc"
     provided "org.grails:grails-plugin-domain-class"
     provided "org.grails.plugins:hibernate5"
-    compileOnly "org.grails.plugins:spring-security-core:4.0.3"
-    testCompile "org.grails.plugins:spring-security-core:4.0.0"
+    compileOnly "org.grails.plugins:spring-security-core:5.2.1"
+    testCompile "org.grails.plugins:spring-security-core:5.2.1"
 }
 
 bootRun {
